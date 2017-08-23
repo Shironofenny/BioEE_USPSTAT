@@ -11,13 +11,26 @@ constants = Constants.Instance()
 
 class ChipDataProcessor(object):
 
-  def __init__(self):
-    self.data = ListQueue.ListQueue(constants.NUM_DATA_DISPLAY)
-    self.bitGuess = 0
-    self.state = 0
-    self.dataIndex = 0
-    self.timeEndOfProtocol = 0
-    self.protocolCount = 0
+    def __init__(self):
+        self.data = ListQueue.ListQueue(constants.NUM_DATA_DISPLAY)
+        self.bitGuess = 0
+        self.state = 0
+        self.dataIndex = 0
+        self.timeEndOfProtocol = 0
+        self.protocolCount = 0
+        
+        # Dictionary based processor
+        self.processor = {
+            0 : self.
     
-  def pushData(self, data):
-    # A state engine is designed to trac the incomming data and decipher it.
+    def pushData(self, data):
+        # A state engine is designed to trac the incomming data and decipher it.
+        pass
+
+    def waitForNextFrame(self, data):
+        pass
+
+    def verifyProtocol(self, data):
+        pass
+
+    def 
