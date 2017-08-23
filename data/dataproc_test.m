@@ -16,8 +16,8 @@ FRAME_MAX_NBIT = 15;
 %% Reading data
 dataAcq = csvread(G_FILENAME);
 
-%dataUsed = dataAcq(DATA_START:95000);%end);
-dataUsed = dataAcq(DATA_START:end);
+dataUsed = dataAcq(DATA_START:95000);%end);
+%dataUsed = dataAcq(DATA_START:end);
 dataProc = zeros(size(dataUsed));
 
 dataProc(dataUsed > VM) = 1;
@@ -54,7 +54,7 @@ while index <= length
     switch procState
         case 1,
             if (dataProc(index) < dataProc(index-1))
-                timeRegistered = index;
+                %timeRegistered = index;
                 frameTimeGuess = index;
                 procState = 2;
             end
@@ -64,7 +64,7 @@ while index <= length
                 if (protocolCount == 4)
                     procState = 4;
                     protocolCount = 0;
-                    timeRegistered = index;
+                    %timeRegistered = index;
                 else
                     procState = 3;
                 end
@@ -86,11 +86,11 @@ while index <= length
             if (dataProc(index) == 0)
                 timeDiff = index - timeRegistered;
                 nHalfBits = round(double(timeDiff) / BIT_HALF_LENGTH);
-                if (mod(nHalfBits, 2) == 0)
-                    %disp(['Possibly bad frame at ', num2str(frameTimeGuess)]);
-                    nBits = nHalfBits / 2;
+                if (mod(nHalfBits, 2) == 1)
+                    disp(['Possibly bad frame at ', num2str(frameTimeGuess)]);
+                    nBits = (nHalfBits + 1) / 2;
                 else
-                    nBits = (nHalfBits - 1 ) / 2;
+                    nBits = nHalfBits / 2;
                 end
                 bitGuess(nBits + 1) = 1;
                 procState = 5;
