@@ -91,11 +91,11 @@ class Constants(object) :
     #DATA_SAVE_FILE_SUFFIX[1] = "_WE2.dat"
     #DATA_SAVE_FILE_SUFFIX[2] = "_CE.dat"
     #DATA_SAVE_FILE_SUFFIX[3] = "_RE.dat"
-    DATA_SAVE_FILE_SUFFIX[3] = "_Data1.dat"
-    DATA_SAVE_FILE_SUFFIX[5] = "_Data2.dat"
+    #DATA_SAVE_FILE_SUFFIX[3] = "_Data1.dat"
+    DATA_SAVE_FILE_SUFFIX[5] = "_Data.dat"
 
     #DATA_SAVED_CHANNELS = [0,1,2,3]
-    DATA_SAVED_CHANNELS = [3,5]
+    DATA_SAVED_CHANNELS = [5]
     DATA_SAVE_ENABLED = True
 
     # -------------------------------------------------------

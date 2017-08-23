@@ -22,8 +22,8 @@ class PlotRefresher(object) :
   def __init__(self):
     self.plot1Handle = None
     self.plot2Handle = None
-    self.plot1Number = 3
-    self.plot2Number = 5
+    self.plot1Number = 5
+    self.plot2Number = 0
     self.plot1YLim = [0,0]
     self.plot2YLim = [0,0]
 
@@ -108,14 +108,12 @@ class PlotRefresher(object) :
     if not self.channels[self.plot1Number].isEmpty():
       self.plot1Handle.clear()
       self.plot1Handle.plot(self.channels[self.plot1Number].getData())
-      self.plot1Handle.setXRange(0, constants.NUM_DATA_DISPLAY, padding=0)
+      self.plot1Handle.setXRange(0, constants.NUM_DATA_DISPLAY, padding=0.02)
 
     if not self.channels[self.plot2Number].isEmpty():
       self.plot2Handle.clear()
       self.plot2Handle.plot(self.channels[self.plot2Number].getData())
       self.plot2Handle.setXRange(0, constants.NUM_DATA_DISPLAY, padding=0.02)
-      self.plot2Handle.getAxis('bottom').setScale(0.2)
-      self.plot2Handle.getAxis('bottom').setLabel('Time', units='s')
 
     self.channelLock.release()
 
@@ -138,18 +136,14 @@ class PlotRefresher(object) :
           if addr >= 8 :
             pass
           else :
-            self.dispDownsampleCounter[addr] = self.dispDownsampleCounter[addr] + 1
-            self.saveDownsampleCounter[addr] = self.saveDownsampleCounter[addr] + 1
-            if self.dispDownsampleCounter[addr] == constants.DATA_DISP_DOWNSAMPLE :
-              self.dispDownsampleCounter[addr] = 0
-              self.channels[addr].push(value)
+            self.dispDownsampleCounter[addr] = 0
+            self.channels[addr].push(value)
             if self.dataStorageEnabled :
               if self.dataStorage == None :
                 log.write("No file specified, data not saved")
               else :
-                if self.saveDownsampleCounter[addr] == constants.DATA_SAVE_DOWNSAMPLE :
-                  self.dataStorage.pushData(addr, value)
-                  self.saveDownsampleCounter[addr] = 0
+                self.dataStorage.pushData(addr, value)
+                self.saveDownsampleCounter[addr] = 0
               
       self.channelLock.release()
 
