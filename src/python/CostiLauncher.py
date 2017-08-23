@@ -17,7 +17,6 @@ import LogManager
 import Constants
 import CostiFPGA
 import PlotRefresher
-import SWVEngine
 import DataStorage
 
 # Finding the gui file (python version)
@@ -61,8 +60,6 @@ class Costi(QtWidgets.QMainWindow):
 
     self.plotRefresher = PlotRefresher.PlotRefresher()
     self.plotRefresher.startPlotRefresherThread()
-
-    self.swvEngine = SWVEngine.SWVEngine()
 
     self.linkGUI()
 
@@ -122,7 +119,6 @@ class Costi(QtWidgets.QMainWindow):
     '''
     self.ui.action_Load_FPGA.triggered.connect(self.loadBitFile)
     self.ui.action_Connect_FPGA.triggered.connect(self.connectCostiFPGA)
-    self.ui.actionSquare_wave_voltametry.triggered.connect(self.performSWV)
 
     self.ui.pbSetRE.clicked.connect(self.setREValue)
     self.ui.pbSetWE1.clicked.connect(self.setWE1Value)
@@ -201,9 +197,6 @@ class Costi(QtWidgets.QMainWindow):
       fpga.setADCRefValue(ADCRefValue)
     else :
       log.write("The value for ADC Reference is not legit. Please double check...")
-
-  def performSWV(self):
-    self.swvEngine.initSWV()
 
 # -----------------------------------------------------------
 # The following functions are used to start the auto-updating

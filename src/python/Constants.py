@@ -143,3 +143,12 @@ class Constants(object) :
 
     # ADC configuration word
     ADC_CONFIGURE_CODE=0xC104
+    
+    # -------------------------------------------------------------
+    # Below are the default data processing and storage configurations
+    # -------------------------------------------------------------
+    DP_BIT_MAX_LENGTH = 12;
+    DP_BIT_HALF_LENGTH = 4;
+    DP_BIT_FULL_LENGTH = 8;
+    DP_FRAME_MAX_NBIT = 15;
+    DP_VMIDDLE = 0.25;
