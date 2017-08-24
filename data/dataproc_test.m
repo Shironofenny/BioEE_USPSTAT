@@ -2,7 +2,9 @@
 % Temporary data processing script to analyze data recorded from USPSTAT V2.718
 
 % Reset environment
-clc; clear all; close all;
+clc; 
+clear all; 
+close all;
 
 %% Global variables
 G_FILENAME = './USPSTAT/17Aug230149PM_Data.dat';
@@ -16,8 +18,8 @@ FRAME_MAX_NBIT = 15;
 %% Reading data
 dataAcq = csvread(G_FILENAME);
 
-dataUsed = dataAcq(DATA_START:95000);%end);
-%dataUsed = dataAcq(DATA_START:end);
+%dataUsed = dataAcq(DATA_START:95000);
+dataUsed = dataAcq(DATA_START:end);
 dataProc = zeros(size(dataUsed));
 
 dataProc(dataUsed > VM) = 1;
@@ -54,7 +56,7 @@ while index <= length
     switch procState
         case 1,
             if (dataProc(index) < dataProc(index-1))
-                %timeRegistered = index;
+                timeRegistered = index;
                 frameTimeGuess = index;
                 procState = 2;
             end
@@ -88,11 +90,11 @@ while index <= length
                 nHalfBits = round(double(timeDiff) / BIT_HALF_LENGTH);
                 if (mod(nHalfBits, 2) == 1)
                     disp(['Possibly bad frame at ', num2str(frameTimeGuess)]);
-                    nBits = (nHalfBits + 1) / 2;
+                    nBits = (nHalfBits - 1) / 2;
                 else
                     nBits = nHalfBits / 2;
                 end
-                bitGuess(nBits + 1) = 1;
+                bitGuess(nBits) = 1;
                 procState = 5;
             end
             if ((index - frameTimeGuess) > BIT_FULL_LENGTH * FRAME_MAX_NBIT)
