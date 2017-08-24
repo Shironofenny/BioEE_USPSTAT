@@ -7,6 +7,7 @@ import CostiFPGA
 import LogManager
 import Constants
 import DataStorage
+import ChipDataProcessor
 
 from ListQueue import ListQueue
 
@@ -38,12 +39,10 @@ class PlotRefresher(object) :
 
     self.channelLock = threading.RLock()
 
-    # Initialize the down sample counter
-    self.dispDownsampleCounter = [0] * 8
-    self.saveDownsampleCounter = [0] * 8
-
     self.dataStorage = DataStorage.Instance() 
     self.dataStorageEnabled = constants.DATA_SAVE_ENABLED
+
+    self.chipDataProcessor = ChipDataProcessor.ChipDataProcessor()
 
   def setDataStorage(self, ds):
     self.dataStorage = ds
@@ -112,7 +111,7 @@ class PlotRefresher(object) :
 
     if not self.channels[self.plot2Number].isEmpty():
       self.plot2Handle.clear()
-      self.plot2Handle.plot(self.channels[self.plot2Number].getData())
+      self.plot2Handle.plot(self.chipDataProcessor.getData())
       self.plot2Handle.setXRange(0, constants.NUM_DATA_DISPLAY, padding=0.02)
 
     self.channelLock.release()
@@ -133,17 +132,23 @@ class PlotRefresher(object) :
           point = data[i]
           addr = int(point / 4096)
           value = float(point % 4096) / constants.DAC_MAX_CODE * adcRange
+          
+          # In this specific application, binary code is enough
+          if (value > constants.DP_VMIDDLE):
+              bincode = 1
+          else :
+              bincode = 0
+
           if addr >= 8 :
             pass
           else :
-            self.dispDownsampleCounter[addr] = 0
-            self.channels[addr].push(value)
+            self.channels[addr].push(bincode)
+            self.chipDataProcessor.pushData(bincode)
             if self.dataStorageEnabled :
               if self.dataStorage == None :
                 log.write("No file specified, data not saved")
               else :
-                self.dataStorage.pushData(addr, value)
-                self.saveDownsampleCounter[addr] = 0
+                self.dataStorage.pushData(addr, bincode)
               
       self.channelLock.release()
 

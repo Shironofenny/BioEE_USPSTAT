@@ -93,6 +93,7 @@ class Constants(object) :
     #DATA_SAVE_FILE_SUFFIX[3] = "_RE.dat"
     #DATA_SAVE_FILE_SUFFIX[3] = "_Data1.dat"
     DATA_SAVE_FILE_SUFFIX[5] = "_Data.dat"
+    DATA_SAVE_FILE_ANALOG_SUFFIX = "_Analog.dat"
 
     #DATA_SAVED_CHANNELS = [0,1,2,3]
     DATA_SAVED_CHANNELS = [5]
@@ -147,6 +148,7 @@ class Constants(object) :
     # -------------------------------------------------------------
     # Below are the default data processing and storage configurations
     # -------------------------------------------------------------
+
     DP_BIT_MAX_LENGTH = 12;
     DP_BIT_HALF_LENGTH = 4;
     DP_BIT_FULL_LENGTH = 8;
