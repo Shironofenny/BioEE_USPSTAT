@@ -1,6 +1,8 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import sys
+
 import LogManager
 import Constants
 import ListQueue
@@ -40,9 +42,12 @@ class ChipDataProcessor(object):
     def getData(self):
         return self.dataList.getData()
 
+    def isEmpty(self):
+        return self.dataList.isEmpty()
+
     def pushData(self, data):
         # A state engine is designed to trac the incomming data and decipher it.
-        
+        self.currentData = data
         self.dataIndex = self.dataIndex + 1
         self.processor[self.state]()
         self.previousData = self.currentData
@@ -72,25 +77,34 @@ class ChipDataProcessor(object):
                 self.dataIndex = 0
 
     def decodeBitL(self):
-        if (self.currentData == 0) :
-            nHalfBits = round(float(self.dataIndex) / constants.DP_BIT_HALF_LENGTH)
-            if (nHalfBits % 2 == 1):
-                nBits = (nHalfBits - 1) / 2
-            else :
-                nBits = nHalfBits / 2;
+        try :
+            if (self.currentData == 0) :
+                nHalfBits = int(round(float(self.dataIndex) / constants.DP_BIT_HALF_LENGTH))
+                #sys.stdout.write(str(nHalfBits) + ' ')
+                if (nHalfBits % 2 == 1):
+                    nBits = int((nHalfBits - 1) / 2)
+                else :
+                    nBits = int(nHalfBits / 2);
+                
+                if (nBits > 9 or nBits < 1) :
+                    pass #log.write("Data detected out of range! Aborting this data point!", 1)
+                else :
+                    self.bitGuess[nBits-1] = 1
+                        
+                self.state = 4
+            if (self.dataIndex > constants.DP_BIT_FULL_LENGTH * constants.DP_FRAME_MAX_NBIT) :
+                self.state = 0
+                if (sum(self.bitGuess) % 2 == 1) : 
+                    pass #log.write("Parity check failed", 1)
 
-            self.bitGuess[nBits] = 1
-            self.state = 4
-        if (self.dataIndex > constants.DP_BIT_FULL_LENGTH * constants.DP_FRAME_MAX_NBIT) :
-            self.state = 0
-            if (sum(self.bitGuess) % 2 == 1) :
-                log.write("Parity check failed, possibly decoded in a wrong way")
-
-            # Converting bit data into integer
-            analogValue = sum([self.bitGuess[7-i] << i for i in range(7)])
-            analogData.push(analogValue)
-            dataInterface.pushData('analog', analogValue)
-            self.bitGuess = [0] * 9
+                # Converting bit data into integer
+                analogValue = sum([self.bitGuess[7-i] << i for i in range(8)])
+                self.dataList.push(analogValue)
+                dataInterface.pushData('analog', analogValue)
+                self.bitGuess = [0] * 9
+        except :
+            import pdb
+            pdb.pm()
 
     def decodeBitH(self):
         if (self.currentData == 1) : 

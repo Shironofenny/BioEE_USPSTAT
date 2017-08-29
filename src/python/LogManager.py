@@ -19,7 +19,7 @@ def Instance():
   return _instance
 
 class LogManager(object):
-
+    
     def __init__(self):
       """ Initialize the empty log function list
       """

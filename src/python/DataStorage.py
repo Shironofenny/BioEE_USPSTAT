@@ -13,7 +13,7 @@ import FeUtils as utils
 log = LogManager.Instance()
 constants = Constants.Instance()
 
-save_path = utils.feFindDir(constants.DATA_SAVE_DIR, 1)
+save_path = utils.feFindDir(constants.DATA_SAVE_DIR, 3)
 if save_path == None :
 	os.mkdir("data")
 	save_path = "data"
